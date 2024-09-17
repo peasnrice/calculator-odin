@@ -17,7 +17,7 @@ To apply border-box to all HTML html {
     padding: 10px;
 }
 
-#display {
+.display {
     flex: 1;
     text-align: right;
     font-size: 48px;
