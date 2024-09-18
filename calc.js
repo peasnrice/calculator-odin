@@ -14,11 +14,15 @@ let logicHandler = (func, val) => {
             if (decCount < 1) {
                 displayStr += val;
             }
-        } else if (displayStr === "0") {
+        } else if (displayStr === "0" && "num" !== "0") {
             displayStr = val;
         } else {
             displayStr += val;
         }
+    } else if (func === "backspace") {
+        if (displayStr.length !== 1) { displayStr = displayStr.slice(0, -1); }
+        else { displayStr = "0"; }
+
     }
 
     displayLine2.textContent = displayStr;
@@ -35,7 +39,6 @@ buttonsContainer.addEventListener("click", (event) => {
             break;
         case "backspace":
             logicHandler("backspace", "backspace");
-            displayLine2.textContent = displayLine2.textContent.split("").splice(0, 1).join("");
             break;
         case "invert":
             logicHandler("fancy", "invert");
