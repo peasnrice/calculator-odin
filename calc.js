@@ -43,8 +43,22 @@ let operate = (func, val) => {
         }
 
     } else if (func === "backspace") {
-        if (displayStr2.length !== 1) { displayStr2 = displayStr2.slice(0, -1); }
-        else { displayStr2 = "0"; }
+        if (displayStr2.length !== 1) {
+            displayStr2 = displayStr2.slice(0, -1);
+            if (val2 === null) {
+                val1 = Number(displayStr2)
+            } else {
+                val2 = Number(displayStr2)
+            }
+        }
+        else {
+            displayStr2 = "0";
+            if (val2 === null) {
+                val1 = Number(displayStr2)
+            } else {
+                val2 = Number(displayStr2)
+            }
+        }
 
         // when an operator is selected, store the current value in memory and reset the display.
     } else if (func === "op") {
@@ -53,8 +67,8 @@ let operate = (func, val) => {
         displayStr1 = `${val1} ${op}`
         val2 = null;
     } else if (func === "eval") {
-        if (val1 === null) {
-            val1 = 0;
+        if (val1 === null || val2 === null) {
+            return;
         }
         switch (op) {
             case "/":
@@ -143,6 +157,10 @@ buttonsContainer.addEventListener("click", (event) => {
 
 // handle keyboard events
 document.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+        event.preventDefault();
+    }
+
     if (event.key >= '0' && event.key <= '9') {
         operate("num", event.key);
     } else {
