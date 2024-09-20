@@ -1,4 +1,5 @@
 My Odin Project Calculator Assignment [(See Project: Calculator)](https://www.theodinproject.com/lessons/foundations-calculator)
+
 Styling mimics the iOS calculator app.
 The calculator has keyboard support, even including backspace to remove the last digit.
 
