@@ -1,5 +1,6 @@
 // capture a users button input (create event listeners for buttons and different button types)
 const buttonsContainer = document.querySelector("#buttons-container")
+const displayLine1 = document.querySelector("#display-line-1");
 const displayLine2 = document.querySelector("#display-line-2");
 const acBtn = document.querySelector("#ac");
 const backspaceBtn = document.querySelector("#backspace");
@@ -14,67 +15,93 @@ let multiply = (x, y) => x * y;
 let divide = (x, y) => y === 0 ? "Nope." : x / y;
 
 let operate = (func, val) => {
-    let displayStr = displayLine2.textContent;
-    let displayStrArr = displayStr.split("");
+    let displayStr1 = displayLine1.textContent;
+    let displayStr2 = displayLine2.textContent;
+    let displayStrArr = displayStr2.split("");
 
     if (func === "num") {
         // handle decimal point
         if (val === ".") {
             let decCount = displayStrArr.filter((char) => char === ".");
             if (decCount < 1) {
-                displayStr += val;
+                displayStr2 += val;
             }
         } else if (op === null) {
             if (val1 === null) {
-                displayStr = val;
+                displayStr2 = val;
             } else {
-                displayStr += val;
+                displayStr2 += val;
             }
-            val1 = Number(displayStr);
+            val1 = Number(displayStr2);
         } else {
             if (val2 === null) {
-                displayStr = val;
+                displayStr2 = val;
             } else {
-                displayStr += val;
+                displayStr2 += val;
             }
-            val2 = Number(displayStr);
+            val2 = Number(displayStr2);
         }
 
     } else if (func === "backspace") {
-        if (displayStr.length !== 1) { displayStr = displayStr.slice(0, -1); }
-        else { displayStr = "0"; }
+        if (displayStr2.length !== 1) { displayStr2 = displayStr2.slice(0, -1); }
+        else { displayStr2 = "0"; }
 
         // when an operator is selected, store the current value in memory and reset the display.
     } else if (func === "op") {
-        val1 = Number(displayStr);
+        val1 = Number(displayStr2);
         op = val;
+        displayStr1 = `${val1} ${op}`
         val2 = null;
     } else if (func === "eval") {
+        if (val1 === null) {
+            val1 = 0;
+        }
         switch (op) {
             case "/":
-                val1 = divide(val1, val2);
+                displayStr1 = `${val1} ${op} ${val2} =`
+                displayStr2 = divide(val1, val2);
                 break;
             case "x":
-                val1 = multiply(val1, val2);
+                displayStr1 = `${val1} ${op} ${val2} =`
+                displayStr2 = multiply(val1, val2);
                 break;
             case "-":
-                val1 = subtract(val1, val2);
+                displayStr1 = `${val1} ${op} ${val2} =`
+                displayStr2 = subtract(val1, val2);
                 break;
             case "+":
-                val1 = add(val1, val2);
+                displayStr1 = `${val1} ${op} ${val2} =`
+                displayStr2 = add(val1, val2);
                 break;
             default:
+                val1 = val1;
                 break;
         }
-        displayStr = val1;
+        val1 = displayStr2;
     } else if (func === "clear") {
         val1 = null;
         op = null
         val2 = null;
-        displayStr = "0";
+        displayStr2 = "0";
+        displayStr1 = "";
+    } else if (func === "fancy") {
+        op = val;
+        switch (op) {
+            case "invert":
+                val1 = multiply(val1, -1);
+                displayStr2 = val1;
+                break;
+            case "%":
+                val1 = divide(val1, 100);
+                displayStr2 = val1;
+                break;
+            default:
+                break;
+        }
     }
+    displayLine1.textContent = displayStr1;
+    displayLine2.textContent = displayStr2;
 
-    displayLine2.textContent = displayStr;
     console.log(`val1: ${val1}`);
     console.log(`op: ${op}`);
     console.log(`val2: ${val2}`);
