@@ -3,126 +3,136 @@ const buttonsContainer = document.querySelector("#buttons-container")
 const displayLine2 = document.querySelector("#display-line-2");
 const acBtn = document.querySelector("#ac");
 const backspaceBtn = document.querySelector("#backspace");
-let memory = "";
 
-// display input within display line-2
-// validate input sequence, reject invalid inputs
-let logicHandler = (func, val) => {
+let val1 = null;
+let op = null;
+let val2 = null;
+
+let add = (x, y) => x + y;
+let subtract = (x, y) => x - y;
+let multiply = (x, y) => x * y;
+let divide = (x, y) => y === 0 ? "Nope." : x / y;
+
+let operate = (func, val) => {
     let displayStr = displayLine2.textContent;
     let displayStrArr = displayStr.split("");
 
     if (func === "num") {
+        // handle decimal point
         if (val === ".") {
             let decCount = displayStrArr.filter((char) => char === ".");
             if (decCount < 1) {
                 displayStr += val;
             }
-        } else if (displayStr === "0" && "num" !== "0") {
-            displayStr = val;
+        } else if (op === null) {
+            if (val1 === null) {
+                displayStr = val;
+            } else {
+                displayStr += val;
+            }
+            val1 = Number(displayStr);
         } else {
-            displayStr += val;
+            if (val2 === null) {
+                displayStr = val;
+            } else {
+                displayStr += val;
+            }
+            val2 = Number(displayStr);
         }
+
     } else if (func === "backspace") {
         if (displayStr.length !== 1) { displayStr = displayStr.slice(0, -1); }
         else { displayStr = "0"; }
 
         // when an operator is selected, store the current value in memory and reset the display.
-        // if  
     } else if (func === "op") {
-        displayStr += val;
+        val1 = Number(displayStr);
+        op = val;
+        val2 = null;
     } else if (func === "eval") {
-        //parse string and return value
+        switch (op) {
+            case "/":
+                val1 = divide(val1, val2);
+                break;
+            case "x":
+                val1 = multiply(val1, val2);
+                break;
+            case "-":
+                val1 = subtract(val1, val2);
+                break;
+            case "+":
+                val1 = add(val1, val2);
+                break;
+            default:
+                break;
+        }
+        displayStr = val1;
+    } else if (func === "clear") {
+        val1 = null;
+        op = null
+        val2 = null;
+        displayStr = "0";
     }
 
     displayLine2.textContent = displayStr;
+    console.log(`val1: ${val1}`);
+    console.log(`op: ${op}`);
+    console.log(`val2: ${val2}`);
 
 }
 
+// define button ops as a map
+const buttonOperations = {
+    "ac": ["clear", "ac"],
+    "backspace": ["backspace", "backspace"],
+    "invert": ["fancy", "invert"],
+    "percentage": ["fancy", "%"],
+    "zero": ["num", "0"],
+    "one": ["num", "1"],
+    "two": ["num", "2"],
+    "three": ["num", "3"],
+    "four": ["num", "4"],
+    "five": ["num", "5"],
+    "six": ["num", "6"],
+    "seven": ["num", "7"],
+    "eight": ["num", "8"],
+    "nine": ["num", "9"],
+    "decimal": ["num", "."],
+    "divide": ["op", "/"],
+    "multiply": ["op", "x"],
+    "subtract": ["op", "-"],
+    "add": ["op", "+"],
+    "special": ["special", "😊"],
+    "submit": ["eval", "="]
+};
+
+// handle click events for HTML buttons
 buttonsContainer.addEventListener("click", (event) => {
-    let target = event.target;
-
-    // capture button input order
-    switch (target.id) {
-        case "ac":
-            logicHandler("clear", "ac");
-            break;
-        case "backspace":
-            logicHandler("backspace", "backspace");
-            break;
-        case "invert":
-            logicHandler("fancy", "invert");
-            break;
-        case "percentage":
-            logicHandler("fancy", "%");
-            break;
-        case "zero":
-            logicHandler("num", "0");
-            break;
-        case "one":
-            logicHandler("num", "1");
-            break;
-        case "two":
-            logicHandler("num", "2");
-            break;
-        case "three":
-            logicHandler("num", "3");
-            break;
-        case "four":
-            logicHandler("num", "4");
-            break;
-        case "five":
-            logicHandler("num", "5");
-            break;
-        case "six":
-            logicHandler("num", "6");
-            break;
-        case "seven":
-            logicHandler("num", "7");
-            break;
-        case "eight":
-            logicHandler("num", "8");
-            break;
-        case "nine":
-            logicHandler("num", "9");
-            break;
-        case "decimal":
-            logicHandler("num", ".");
-            break;
-        case "divide":
-            logicHandler("op", "/");
-            break;
-        case "multiply":
-            logicHandler("op", "x");
-            break;
-        case "subtract":
-            logicHandler("op", "-");
-            break;
-        case "add":
-            logicHandler("op", "+");
-            break;
-        case "special":
-            logicHandler("special", "😊");
-            break;
-        case "submit":
-            logicHandler("eval", "=");
-            break;
-        default:
-            break;
+    const operation = buttonOperations[event.target.id];
+    if (operation) {
+        operate(...operation);
     }
-
-    // if display line reads 0 display AC button, else show Backspace button(⌫)
-    if (displayLine2.textContent === "0") {
-        acBtn.style.display = "block";
-        backspaceBtn.style.display = "none";
-    } else {
-        acBtn.style.display = "none";
-        backspaceBtn.style.display = "block";
-    }
-
 });
 
-// when operator is pressed, store the previously submitted number into memory.
-// perform operator on both numbers.
-// display result on = (submit)
-// write test cases for calc functions
-
+// handle keyboard events
+document.addEventListener("keydown", (event) => {
+    if (event.key >= '0' && event.key <= '9') {
+        operate("num", event.key);
+    } else {
+        const keyboardOperations = {
+            "Enter": ["eval", "="],
+            "Backspace": ["backspace", "backspace"],
+            "Escape": ["clear", "ac"],
+            ".": ["num", "."],
+            "/": ["op", "/"],
+            "*": ["op", "x"],
+            "-": ["op", "-"],
+            "+": ["op", "+"],
+            "%": ["fancy", "%"]
+        };
+        const keyboardOperation = keyboardOperations[event.key];
+        if (keyboardOperation) {
+            operate(...keyboardOperation);
+        }
+    }
+});
