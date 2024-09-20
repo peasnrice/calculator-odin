@@ -3,7 +3,10 @@ const buttonsContainer = document.querySelector("#buttons-container")
 const displayLine2 = document.querySelector("#display-line-2");
 const acBtn = document.querySelector("#ac");
 const backspaceBtn = document.querySelector("#backspace");
+let memory = "";
 
+// display input within display line-2
+// validate input sequence, reject invalid inputs
 let logicHandler = (func, val) => {
     let displayStr = displayLine2.textContent;
     let displayStrArr = displayStr.split("");
@@ -23,6 +26,12 @@ let logicHandler = (func, val) => {
         if (displayStr.length !== 1) { displayStr = displayStr.slice(0, -1); }
         else { displayStr = "0"; }
 
+        // when an operator is selected, store the current value in memory and reset the display.
+        // if  
+    } else if (func === "op") {
+        displayStr += val;
+    } else if (func === "eval") {
+        //parse string and return value
     }
 
     displayLine2.textContent = displayStr;
@@ -101,7 +110,7 @@ buttonsContainer.addEventListener("click", (event) => {
             break;
     }
 
-    // swap out backspace and ac button depending on display contents
+    // if display line reads 0 display AC button, else show Backspace button(⌫)
     if (displayLine2.textContent === "0") {
         acBtn.style.display = "block";
         backspaceBtn.style.display = "none";
@@ -112,12 +121,8 @@ buttonsContainer.addEventListener("click", (event) => {
 
 });
 
-
-
-
-// display input within display line-2
-// if viewing a result display AC button, else show Backspace button(⌫)
-// validate input sequence, reject invalid inputs
-// write test cases for calc functions
+// when operator is pressed, store the previously submitted number into memory.
+// perform operator on both numbers.
 // display result on = (submit)
+// write test cases for calc functions
 
