@@ -71,3 +71,7 @@ button {
     background-color: #FFA00B;
     font-size: 44px;
 }
+
+.rotated {
+    transform: rotate(180deg);
+}

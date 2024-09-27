@@ -4,6 +4,8 @@ const displayLine1 = document.querySelector("#display-line-1");
 const displayLine2 = document.querySelector("#display-line-2");
 const acBtn = document.querySelector("#ac");
 const backspaceBtn = document.querySelector("#backspace");
+const specialBtn = document.querySelector("#special");
+const displayContainer = document.querySelector("#display-container");
 
 let val1 = null;
 let op = null;
@@ -112,6 +114,9 @@ let operate = (func, val) => {
             default:
                 break;
         }
+    } else if (func == "special") {
+        displayContainer.classList.toggle("rotated");
+        specialBtn.classList.toggle("rotated");
     }
     displayLine1.textContent = displayStr1;
     displayLine2.textContent = displayStr2;
